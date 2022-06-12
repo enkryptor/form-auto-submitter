@@ -1,11 +1,19 @@
 "use strict"
 
+const classNames = {
+    autoSubmit: 'auto-submit',
+    preventNativeSubmit: 'prevent-native-submit',
+}
+
 window.addEventListener('load', initializeListeners)
 
 function initializeListeners() {
-    const forms = document.querySelectorAll('form.auto-submit')
+    const forms = document.querySelectorAll(`form.${classNames.autoSubmit}`)
     for (const form of forms) {
         form.addEventListener('change', onChange)
+        if (form.classList.contains(classNames.preventNativeSubmit)) {
+            form.addEventListener('submit', preventDefault)
+        }
     }
 }
 
@@ -21,6 +29,11 @@ function onChange(event) {
             processResult(result.ok, control)
         }
     })
+}
+
+function preventDefault(event) {
+    event.preventDefault()
+    console.log(event)
 }
 
 async function sendForm(form) {
